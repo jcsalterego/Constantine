@@ -18,6 +18,16 @@ def usage():
     sys.exit(1)
 
 
+def get_node(doc, path):
+    path_words = path.split(".")
+    node = doc
+    for word in path_words:
+        if word not in node:
+            return None
+        node = node[word]
+    return node
+
+
 def create_session(app_user, app_token):
     url = "https://bsky.social/xrpc/com.atproto.server.createSession"
     response = requests.post(url, json={"identifier": app_user, "password": app_token})
@@ -115,16 +125,6 @@ def main(argv):
     print(f"{len(hellthread_reply_uris)} hellthread posts total", file=sys.stderr)
     for uri in hellthread_reply_uris:
         print(to_web_url(uri))
-
-
-def get_node(doc, path):
-    path_words = path.split(".")
-    node = doc
-    for word in path_words:
-        if word not in node:
-            return None
-        node = node[word]
-    return node
 
 
 if __name__ == "__main__":
