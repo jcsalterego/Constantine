@@ -1,6 +1,6 @@
 # Constantine
 
-Constantine helps you find posts in the [Hellthread](https://github.com/bluesky-social/atproto/pull/988/files).
+Constantine helps you find your posts in the [Hellthread](https://github.com/bluesky-social/atproto/pull/988/files).
 
 ## Requirements
 
