@@ -1,0 +1,54 @@
+name: Get Hellthreads
+run-name: Get Hellthreads
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_handle:
+        description: "Bluesky Username, e.g. john-constantine.bsky.social"
+        required: true
+
+env:
+  BLUESKY_HANDLE: ${{ vars.BLUESKY_HANDLE }}
+  BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+
+jobs:
+  check_bluesky_handle:
+    runs-on: ubuntu-latest
+    name: Has Variable BLUESKY_HANDLE
+    steps:
+      - run: |
+          if [ -n "${BLUESKY_HANDLE}" ]; then
+              echo "BLUESKY_HANDLE is set."
+          else
+              echo "The BLUESKY_HANDLE variable needs to be set."
+              echo "Go to this repository's Settings > Secrets and variables > Variables."
+              exit 1
+          fi
+  check_bluesky_app_password:
+    runs-on: ubuntu-latest
+    name: Has Secret BLUESKY_APP_PASSWORD
+    steps:
+      - run: |
+          if [ -n "${BLUESKY_APP_PASSWORD}" ]; then
+              echo "BLUESKY_APP_PASSWORD is set."
+          else
+              echo "The BLUESKY_APP_PASSWORD variable needs to be set."
+              echo "Go to this repository's Settings > Secrets and variables > Secrets."
+              exit 1
+          fi
+  get_hellthreads:
+    runs-on: ubuntu-latest
+    name: Get Hellthreads
+    needs:
+      - check_bluesky_handle
+      - check_bluesky_app_password
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get Hellthreads
+        env:
+          TARGET_HANDLE: ${{ inputs.target_handle }}
+          BLUESKY_USER: ${{ vars.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run: |
+          python get-hellthreads.py ${TARGET_HANDLE}
