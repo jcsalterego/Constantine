@@ -9,6 +9,10 @@ Constantine helps you find your posts in the [Hellthread](https://github.com/blu
 
 ## Usage
 
+Constantine can run locally or from GitHub Actions.
+
+### Running Locally
+
 Set environment variables `BLUESKY_USER` and `BLUESKY_APP_PASSWORD`.
 
 Example:
@@ -38,7 +42,7 @@ https://bsky.app/profile/did:plc:vc7f4oafdgxsihk4cry2xpze/post/3jwxwrb2g7c2b
 https://bsky.app/profile/did:plc:vc7f4oafdgxsihk4cry2xpze/post/3jvrw74c26r2b
 ```
 
-## Running from GitHub Actions
+### Running from GitHub Actions
 
 1. Fork this repository
 2. In your fork's **Settings > Secrets and variables > Actions**, set the following:
