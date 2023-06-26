@@ -38,6 +38,14 @@ https://bsky.app/profile/did:plc:vc7f4oafdgxsihk4cry2xpze/post/3jwxwrb2g7c2b
 https://bsky.app/profile/did:plc:vc7f4oafdgxsihk4cry2xpze/post/3jvrw74c26r2b
 ```
 
+## Running from GitHub Actions
+
+1. Fork this repository
+2. In your fork's **Settings > Secrets and variables > Actions**, set the following:
+  * Variable: `BLUESKY_HANDLE`
+  * Secret: `BLUESKY_APP_PASSWORD`
+3. Go to **Actions** > **Get Hellthreads**, select **Run Workflow**, put in your Bluesky handle
+
 ## LICENSE
 
 [2-Clause BSD](LICENSE)
