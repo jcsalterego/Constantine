@@ -9,12 +9,12 @@ Constantine helps you find your posts in the [Hellthread](https://github.com/blu
 
 ## Usage
 
-Set environment variables `BLUESKY_USERNAME` and `BLUESKY_APP_PASSWORD`.
+Set environment variables `BLUESKY_USER` and `BLUESKY_APP_PASSWORD`.
 
 Example:
 
 ```
-export BLUESKY_USERNAME=jcsalterego.bsky.social
+export BLUESKY_USER=jcsalterego.bsky.social
 export BLUESKY_APP_PASSWORD=abcd-efgh-ijkl-mnop
 ./get-hellthreads.py jcsalterego.bsky.social
 ```
