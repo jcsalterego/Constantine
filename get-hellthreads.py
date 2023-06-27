@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import argparse
 
 from constantine import (
     create_session,
@@ -10,15 +11,25 @@ from constantine import (
 )
 
 
-def usage():
-    print("Usage: get-hellthreads.py <handle>", file=sys.stderr)
+def usage(parser):
+    print(parser.usage, file=sys.stderr)
     sys.exit(1)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "handle",
+        type=str,
+        help="Handle of the user whose hellthreads to fetch",
+    )
+    args = parser.parse_args()
+    return args
+
+
 def main(argv):
-    if len(argv) < 2:
-        usage()
-    actor = argv[1]
+    args = parse_args()
+    handle = args.handle
 
     bluesky_user, bluesky_app_password = require_bluesky_creds_from_env()
     session = create_session(bluesky_user, bluesky_app_password)
@@ -29,7 +40,9 @@ def main(argv):
         )
         sys.exit(1)
 
-    hellthread_reply_uris = fetch_all_hellthread_posts(session, actor)
+    hellthread_reply_uris = fetch_all_hellthread_posts(
+        session, handle
+    )
 
     print(f"{len(hellthread_reply_uris)} hellthread posts total", file=sys.stderr)
     for uri in hellthread_reply_uris:
