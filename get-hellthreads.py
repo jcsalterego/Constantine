@@ -22,7 +22,14 @@ def parse_args():
     parser.add_argument(
         "--before-date",
         type=str,
-        help="Only fetch posts before this date, in the local time zone (YYYY-MM-DD)",
+        help="Only fetch posts before this date (exclusive),"
+        " in the local time zone (YYYY-MM-DD)",
+    )
+    parser.add_argument(
+        "--after-date",
+        type=str,
+        help="Only fetch posts after this date (inclusive),"
+        " in the local time zone (YYYY-MM-DD)",
     )
     parser.add_argument(
         "handle",
@@ -34,16 +41,46 @@ def parse_args():
     if args.before_date is not None:
         # parse YYYY-MM-DD into datetime
         try:
-            args.before_date = datetime.strptime(args.before_date, "%Y-%m-%d")
-            tzlocal = datetime.now(timezone.utc).astimezone().tzinfo
-            args.before_date = args.before_date.replace(tzinfo=tzlocal)
+            args.before_date = parse_local_date(args.before_date)
         except ValueError:
             print(
                 f"Invalid date `{args.before_date}`. Must be YYYY-MM-DD",
                 file=sys.stderr,
             )
             usage(parser)
+
+    if args.after_date is not None:
+        # parse YYYY-MM-DD into datetime
+        try:
+            args.after_date = parse_local_date(args.after_date)
+        except ValueError:
+            print(
+                f"Invalid date `{args.after_date}`. Must be YYYY-MM-DD",
+                file=sys.stderr,
+            )
+            usage(parser)
+
+    if (
+        args.before_date is not None
+        and args.after_date is not None
+        and args.before_date <= args.after_date
+    ):
+        print(
+            f"Invalid date range:\n"
+            f"  --after-date:  {args.after_date}\n"
+            f"  --before-date: {args.before_date}",
+            file=sys.stderr,
+        )
+        usage(parser)
+
     return args
+
+
+def parse_local_date(date_str):
+    date = datetime.strptime(date_str, "%Y-%m-%d")
+    tzlocal = datetime.now(timezone.utc).astimezone().tzinfo
+    date = date.replace(tzinfo=tzlocal)
+    return date
 
 
 def main(argv):
@@ -60,7 +97,7 @@ def main(argv):
         sys.exit(1)
 
     hellthread_reply_uris = fetch_all_hellthread_posts(
-        session, handle, before_date=args.before_date
+        session, handle, before_date=args.before_date, after_date=args.after_date
     )
 
     print(f"{len(hellthread_reply_uris)} hellthread posts total", file=sys.stderr)

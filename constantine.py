@@ -92,14 +92,31 @@ def require_bluesky_creds_from_env():
     return bluesky_user, bluesky_app_password
 
 
-def fetch_all_hellthread_posts(session, actor, before_date=None):
+def filter_created_at(post, before_date, after_date):
+    if before_date is None and after_date is None:
+        return True
+    else:
+        created_at = datetime.fromisoformat(post["post"]["record"]["createdAt"])
+        if before_date is not None and after_date is not None:
+            return after_date <= created_at < before_date
+        elif before_date is not None:
+            return created_at < before_date
+        elif after_date is not None:
+            return created_at >= after_date
+
+
+def fetch_all_hellthread_posts(session, actor, before_date=None, after_date=None):
     all_posts = fetch_all_posts(session, actor)
 
-    if before_date is not None:
+    if before_date is not None or after_date is not None:
+        if before_date:
+            print(f"Filtering posts before {before_date}", file=sys.stderr)
+        if after_date:
+            print(f"Filtering posts on or after {after_date}", file=sys.stderr)
         all_posts = [
             post
             for post in all_posts
-            if datetime.fromisoformat(post["post"]["record"]["createdAt"]) < before_date
+            if filter_created_at(post, before_date, after_date)
         ]
 
     print(f"{len(all_posts)} posts total", file=sys.stderr)
