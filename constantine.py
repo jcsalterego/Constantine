@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+from datetime import datetime
 
 import requests
 
@@ -91,8 +92,16 @@ def require_bluesky_creds_from_env():
     return bluesky_user, bluesky_app_password
 
 
-def fetch_all_hellthread_posts(session, actor):
+def fetch_all_hellthread_posts(session, actor, before_date=None):
     all_posts = fetch_all_posts(session, actor)
+
+    if before_date is not None:
+        all_posts = [
+            post
+            for post in all_posts
+            if datetime.fromisoformat(post["post"]["record"]["createdAt"]) < before_date
+        ]
+
     print(f"{len(all_posts)} posts total", file=sys.stderr)
     hellthread_reply_uris = []
     for feed_item in all_posts:

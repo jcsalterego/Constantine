@@ -2,6 +2,7 @@
 
 import sys
 import argparse
+from datetime import datetime, timezone
 
 from constantine import (
     create_session,
@@ -19,11 +20,29 @@ def usage(parser):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "--before-date",
+        type=str,
+        help="Only fetch posts before this date, in the local time zone (YYYY-MM-DD)",
+    )
+    parser.add_argument(
         "handle",
         type=str,
         help="Handle of the user whose hellthreads to fetch",
     )
     args = parser.parse_args()
+
+    if args.before_date is not None:
+        # parse YYYY-MM-DD into datetime
+        try:
+            args.before_date = datetime.strptime(args.before_date, "%Y-%m-%d")
+            tzlocal = datetime.now(timezone.utc).astimezone().tzinfo
+            args.before_date = args.before_date.replace(tzinfo=tzlocal)
+        except ValueError:
+            print(
+                f"Invalid date `{args.before_date}`. Must be YYYY-MM-DD",
+                file=sys.stderr,
+            )
+            usage(parser)
     return args
 
 
@@ -41,7 +60,7 @@ def main(argv):
         sys.exit(1)
 
     hellthread_reply_uris = fetch_all_hellthread_posts(
-        session, handle
+        session, handle, before_date=args.before_date
     )
 
     print(f"{len(hellthread_reply_uris)} hellthread posts total", file=sys.stderr)
