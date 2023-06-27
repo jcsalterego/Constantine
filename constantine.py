@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import os
 import sys
 
@@ -88,3 +89,24 @@ def require_bluesky_creds_from_env():
         print("BLUESKY_USER and BLUESKY_APP_PASSWORD have to be set", file=sys.stderr)
         sys.exit(1)
     return bluesky_user, bluesky_app_password
+
+
+def fetch_all_hellthread_posts(session, actor):
+    all_posts = fetch_all_posts(session, actor)
+    print(f"{len(all_posts)} posts total", file=sys.stderr)
+    hellthread_reply_uris = []
+    for feed_item in all_posts:
+        if BLESSED_HELLTHREAD in json.dumps(feed_item):
+            if "reason" in feed_item:
+                # skip reposts
+                continue
+
+            post_record_reply_root_uri = get_node(
+                feed_item, "post.record.reply.root.uri"
+            )
+            if (
+                post_record_reply_root_uri is not None
+                and post_record_reply_root_uri == BLESSED_HELLTHREAD
+            ):
+                hellthread_reply_uris.append(feed_item["post"]["uri"])
+    return hellthread_reply_uris

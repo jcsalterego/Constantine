@@ -1,15 +1,12 @@
 #!/usr/bin/env python3
 
-import json
 import sys
 
 from constantine import (
     create_session,
-    fetch_all_posts,
     to_web_url,
-    get_node,
-    BLESSED_HELLTHREAD,
     require_bluesky_creds_from_env,
+    fetch_all_hellthread_posts,
 )
 
 
@@ -32,24 +29,7 @@ def main(argv):
         )
         sys.exit(1)
 
-    all_posts = fetch_all_posts(session, actor)
-    print(f"{len(all_posts)} posts total", file=sys.stderr)
-
-    hellthread_reply_uris = []
-    for feed_item in all_posts:
-        if BLESSED_HELLTHREAD in json.dumps(feed_item):
-            if "reason" in feed_item:
-                # skip reposts
-                continue
-
-            post_record_reply_root_uri = get_node(
-                feed_item, "post.record.reply.root.uri"
-            )
-            if (
-                post_record_reply_root_uri is not None
-                and post_record_reply_root_uri == BLESSED_HELLTHREAD
-            ):
-                hellthread_reply_uris.append(feed_item["post"]["uri"])
+    hellthread_reply_uris = fetch_all_hellthread_posts(session, actor)
 
     print(f"{len(hellthread_reply_uris)} hellthread posts total", file=sys.stderr)
     for uri in hellthread_reply_uris:
