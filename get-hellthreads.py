@@ -83,7 +83,7 @@ def parse_local_date(date_str):
     return date
 
 
-def main(argv):
+def main():
     args = parse_args()
     handle = args.handle
 
@@ -106,4 +106,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
