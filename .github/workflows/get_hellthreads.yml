@@ -51,4 +51,4 @@ jobs:
           BLUESKY_USER: ${{ vars.BLUESKY_HANDLE }}
           BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
         run: |
-          python get-hellthreads.py ${TARGET_HANDLE}
+          python get_hellthreads.py ${TARGET_HANDLE}

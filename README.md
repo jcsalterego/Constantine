@@ -20,7 +20,7 @@ Example:
 ```
 export BLUESKY_USER=jcsalterego.bsky.social
 export BLUESKY_APP_PASSWORD=abcd-efgh-ijkl-mnop
-./get-hellthreads.py jcsalterego.bsky.social
+./get_hellthreads.py jcsalterego.bsky.social
 ```
 ```
 cursor = 1687536512998::bafyreid6a6vn7romdf5tosqgx55qu4cjktq75dho53wyfh64rmdmacvhfe
