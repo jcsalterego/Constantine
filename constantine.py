@@ -46,6 +46,15 @@ def get_xrpc(session, endpoint, params={}):
     return response.json()
 
 
+def post_xrpc(session, endpoint, json={}):
+    response = requests.post(
+        f"https://bsky.social/xrpc/{endpoint}",
+        json=json,
+        headers={"Authorization": f"Bearer {session['accessJwt']}"},
+    )
+    return response.json()
+
+
 def xrpc_app_bsky_feed_get_author_feed(
     session, actor, cursor=None, limit=MAX_GET_AUTHOR_FEED_LIMIT
 ):
