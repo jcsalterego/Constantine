@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import json
-import os
 import sys
 
 from constantine import (
@@ -10,6 +9,7 @@ from constantine import (
     to_web_url,
     get_node,
     BLESSED_HELLTHREAD,
+    require_bluesky_creds_from_env,
 )
 
 
@@ -23,17 +23,11 @@ def main(argv):
         usage()
     actor = argv[1]
 
-    bluesky_user = os.getenv("BLUESKY_USER")
-    bluesky_app_password = os.getenv("BLUESKY_APP_PASSWORD")
-    if not bluesky_user or not bluesky_app_password:
-        print("BLUESKY_USER and BLUESKY_APP_PASSWORD have to be set", file=sys.stderr)
-        sys.exit(1)
-
-    # login
+    bluesky_user, bluesky_app_password = require_bluesky_creds_from_env()
     session = create_session(bluesky_user, bluesky_app_password)
     if session is None:
         print(
-            "Login failed. Please check BLUE_SKY_USER and BLUE_SKY_APP_PASSWORD",
+            "Login failed. Please check BLUESKY_USER and BLUESKY_APP_PASSWORD",
             file=sys.stderr,
         )
         sys.exit(1)
