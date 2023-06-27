@@ -52,7 +52,10 @@ def post_xrpc(session, endpoint, json={}):
         json=json,
         headers={"Authorization": f"Bearer {session['accessJwt']}"},
     )
-    return response.json()
+    if response.status_code == 200 and response.headers.get("Content-Length") == "0":
+        return {}
+    else:
+        return response.json()
 
 
 def xrpc_app_bsky_feed_get_author_feed(
