@@ -12,11 +12,6 @@ from constantine import (
 )
 
 
-def usage(parser):
-    print(parser.usage, file=sys.stderr)
-    sys.exit(1)
-
-
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -28,7 +23,7 @@ def parse_args():
     parser.add_argument(
         "--after-date",
         type=str,
-        help="Only fetch posts after this date (inclusive),"
+        help="Only fetch posts on or after this date (inclusive),"
         " in the local time zone (YYYY-MM-DD)",
     )
     parser.add_argument(
@@ -47,7 +42,7 @@ def parse_args():
                 f"Invalid date `{args.before_date}`. Must be YYYY-MM-DD",
                 file=sys.stderr,
             )
-            usage(parser)
+            sys.exit(1)
 
     if args.after_date is not None:
         # parse YYYY-MM-DD into datetime
@@ -58,7 +53,7 @@ def parse_args():
                 f"Invalid date `{args.after_date}`. Must be YYYY-MM-DD",
                 file=sys.stderr,
             )
-            usage(parser)
+            sys.exit(1)
 
     if (
         args.before_date is not None
@@ -71,7 +66,7 @@ def parse_args():
             f"  --before-date: {args.before_date}",
             file=sys.stderr,
         )
-        usage(parser)
+        sys.exit(1)
 
     return args
 
