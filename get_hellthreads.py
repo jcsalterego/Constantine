@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import sys
 import argparse
+import sys
 from datetime import datetime, timezone
 
 from constantine import (
