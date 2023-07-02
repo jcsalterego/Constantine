@@ -125,13 +125,8 @@ def main():
             break
 
         print(f"Deleting {to_web_url(uri)}", file=sys.stderr)
-        results = delete_post(session, uri)
-        if results is not None and "error" not in results:
-            total_deleted += 1
-        else:
-            print(f"FAILURE: results = {results}", file=sys.stderr)
-            failure = True
-            break
+        delete_post(session, uri)
+        total_deleted += 1
 
     print(f"Deleted {total_deleted} posts", file=sys.stderr)
     if failure:
