@@ -53,7 +53,7 @@ def post_xrpc(session, endpoint, json={}):
         headers={"Authorization": f"Bearer {session['accessJwt']}"},
     )
     if response.status_code == 200:
-        text = response.text()
+        text = response.text
         try:
             return json.loads(text)
         except json.JSONDecodeError:
