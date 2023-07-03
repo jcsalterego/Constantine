@@ -1,0 +1,57 @@
+name: Scheduled delete
+run-name: Scheduled delete
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+env:
+  BLUESKY_HANDLE: ${{ vars.BLUESKY_HANDLE }}
+  BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+
+jobs:
+  check_bluesky_handle:
+    runs-on: ubuntu-latest
+    name: Has Variable BLUESKY_HANDLE
+    steps:
+      - run: |
+          if [ -n "${BLUESKY_HANDLE}" ]; then
+              echo "BLUESKY_HANDLE is set."
+          else
+              echo "The BLUESKY_HANDLE variable needs to be set."
+              echo "Go to this repository's Settings > Secrets and variables > Variables."
+              exit 1
+          fi
+  check_bluesky_app_password:
+    runs-on: ubuntu-latest
+    name: Has Secret BLUESKY_APP_PASSWORD
+    steps:
+      - run: |
+          if [ -n "${BLUESKY_APP_PASSWORD}" ]; then
+              echo "BLUESKY_APP_PASSWORD is set."
+          else
+              echo "The BLUESKY_APP_PASSWORD variable needs to be set."
+              echo "Go to this repository's Settings > Secrets and variables > Secrets."
+              exit 1
+          fi
+  delete_hellthreads:
+    runs-on: ubuntu-latest
+    name: Delete Hellthreads
+    needs:
+      - check_bluesky_handle
+      - check_bluesky_app_password
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - name: Delete Hellthreads
+        env:
+        #   TARGET_HANDLE: ${{ vars.target_handle }}
+          BLUESKY_USER: ${{ vars.BLUESKY_HANDLE }}
+          BLUESKY_APP_PASSWORD: ${{ secrets.BLUESKY_APP_PASSWORD }}
+        run:
+            python delete_hellthreads.py ${BLUESKY_USER} --max-posts 10 --before-date $(date --date="yesterday" +"%Y-%m-%d")
+

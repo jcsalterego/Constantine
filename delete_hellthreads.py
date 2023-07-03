@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 import sys
 from datetime import datetime, timezone
 
 from constantine import (
     create_session,
-    require_bluesky_creds_from_env,
     fetch_all_hellthread_posts,
     post_xrpc,
+    require_bluesky_creds_from_env,
     to_web_url,
 )
 
 APP_BSKY_FEED_POST_COLLECTION = "app.bsky.feed.post"
-MAX_DELETION_COUNT = 100
 
 
 def parse_args():
@@ -34,6 +34,14 @@ def parse_args():
         "handle",
         type=str,
         help="Handle of the user whose hellthreads to fetch",
+    )
+    parser.add_argument(
+        "--max-posts",
+        action="store",
+        dest="max_delete_posts",
+        type=int,
+        help="Maximum number of posts to delete",
+        default=os.getenv("MAX_DELETE_POSTS", 100),
     )
     args = parser.parse_args()
 
@@ -119,9 +127,9 @@ def main():
     total_deleted = 0
     failure = False
     for uri in hellthread_reply_uris:
-        if total_deleted >= MAX_DELETION_COUNT:
+        if total_deleted >= args.max_delete_posts:
             print(
-                f"Reached MAX_DELETION_COUNT={MAX_DELETION_COUNT} posts",
+                f"Reached max-posts={args.max_delete_posts} posts",
                 file=sys.stderr,
             )
             break
