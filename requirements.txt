@@ -1,3 +1,4 @@
 requests==2.28.2
 black==23.3.0
 ruff==0.0.262
+python-dotenv==1.0.0

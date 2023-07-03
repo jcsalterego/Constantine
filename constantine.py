@@ -7,6 +7,10 @@ from json import JSONDecodeError
 
 import requests
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 MAX_GET_AUTHOR_FEED_LIMIT = 100
 
 BLESSED_HELLTHREAD = (
