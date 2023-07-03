@@ -3,6 +3,7 @@ import json
 import os
 import sys
 from datetime import datetime
+from json import JSONDecodeError
 
 import requests
 
@@ -46,18 +47,19 @@ def get_xrpc(session, endpoint, params={}):
     return response.json()
 
 
-def post_xrpc(session, endpoint, json={}):
+def post_xrpc(session, endpoint, json_payload={}):
     response = requests.post(
         f"https://bsky.social/xrpc/{endpoint}",
-        json=json,
+        json=json_payload,
         headers={"Authorization": f"Bearer {session['accessJwt']}"},
     )
     if response.status_code == 200:
         text = response.text
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
-            pass
+        if len(text) > 0 and text[0] == "{":
+            try:
+                return json.loads(text)
+            except JSONDecodeError:
+                pass
         return text
     else:
         raise RuntimeError(f"HTTP {response.status_code}: {response.text}")

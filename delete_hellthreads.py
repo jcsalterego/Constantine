@@ -87,12 +87,14 @@ def delete_post(session, uri):
     if len(words) == 3 and words[1] == APP_BSKY_FEED_POST_COLLECTION:
         did = words[0]
         rkey = words[2]
-        json = {
+        json_payload = {
             "collection": APP_BSKY_FEED_POST_COLLECTION,
             "repo": did,
             "rkey": rkey,
         }
-        return post_xrpc(session, "com.atproto.repo.deleteRecord", json=json)
+        return post_xrpc(
+            session, "com.atproto.repo.deleteRecord", json_payload=json_payload
+        )
     return None
 
 
