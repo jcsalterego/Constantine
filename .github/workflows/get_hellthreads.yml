@@ -45,6 +45,11 @@ jobs:
       - check_bluesky_app_password
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
       - name: Get Hellthreads
         env:
           TARGET_HANDLE: ${{ inputs.target_handle }}
