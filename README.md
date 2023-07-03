@@ -15,6 +15,13 @@ Constantine can run locally or from GitHub Actions.
 
 Set environment variables `BLUESKY_USER` and `BLUESKY_APP_PASSWORD`.
 
+Alternatively, create a `.env` file and set variables there:
+
+```Dotenv
+BLUESKY_USER=<your user/email>
+BLUESKY_APP_PASSWORD=<your password>
+```
+
 Example:
 
 ```
